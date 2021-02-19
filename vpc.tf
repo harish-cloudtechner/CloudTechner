@@ -333,3 +333,12 @@ resource "aws_db_instance" "dbinst" {
   password             = "harish2707"
   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
 }
+resource "aws_s3_bucket" "b" {
+  bucket = "my-tf-test-bucket"
+  acl    = "public"
+
+  tags = {
+    Name        = "harish bucket"
+    Environment = "default"
+  }
+}
