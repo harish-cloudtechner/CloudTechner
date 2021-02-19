@@ -11,7 +11,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "main1" {
   vpc_id     = aws_vpc.main.id
   cidr_block = var.pubcidr_block
-   availability_zone  = "ap-south-1a"
+  availability_zone  = "ap-south-1a"
   map_public_ip_on_launch = "true"
 
   tags = {
@@ -336,7 +336,7 @@ resource "aws_db_instance" "dbinst" {
   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
 }
 resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket"
+  bucket = "terraform_buck"
   acl    = "private"
 
   tags = {
