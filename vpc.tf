@@ -76,13 +76,13 @@ to_port     = 8080
 protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] 
  }
-   ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-    cidr_blocks = [aws_security_group.natsggroup.id] 
- }
+#   ingress {
+#description = "TLS from VPC"
+#from_port   = -1
+#to_port     = -1
+#protocol    = "-1"
+#    cidr_blocks = [aws_security_group.natsggroup.id] 
+# }
 #egress {
 #    from_port   = 0 
 #    to_port     = 0
@@ -109,20 +109,20 @@ resource "aws_security_group" "prisggroup" {
     protocol    = "tcp"
     cidr_blocks = ["10.0.1.0/24"]
   }
-ingress {
-description = "TLS from VPC"
-from_port   = 8080
-to_port     = 8080
-protocol    = "tcp"
-    cidr_blocks = [aws_security_group.pubsggroup.id]
-  }
-ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-    cidr_blocks = [aws_security_group.natsggroup.id] 
- }
+#ingress {
+#escription = "TLS from VPC"
+#from_port   = 8080
+#to_port     = 8080
+#protocol    = "tcp"
+ #   cidr_blocks = [aws_security_group.pubsggroup.id]
+  #}
+#ingress {
+#description = "TLS from VPC"
+#from_port   = -1
+#to_port     = -1
+#protocol    = "-1"
+#    cidr_blocks = [aws_security_group.natsggroup.id] 
+ #}
 tags = {
     Name = var.prisg_name
   }
@@ -163,13 +163,13 @@ to_port     = -1
 protocol    = "icmp"
     cidr_blocks = ["10.0.2.0/24"] 
  }
-  ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-    cidr_blocks = [aws_security_group.prisggroup.id] 
- }
+ # ingress {
+#description = "TLS from VPC"
+#from_port   = -1
+#to_port     = -1
+#protocol    = "-1"
+#    cidr_blocks = [aws_security_group.prisggroup.id] 
+ #}
 tags = {
     Name = var.prisg_name
   }
