@@ -335,7 +335,7 @@ resource "aws_s3_bucket" "b" {
   acl    = "private"
 
   tags = {
-    Name        = "harishbucket"
+    Name        = "teraform_bucket"
     Environment = "default"
   }
 }
