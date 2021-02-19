@@ -177,9 +177,9 @@ tags = {
 }
 resource "aws_security_group_rule" "pubsggroup" {
   type              = "ingress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "tcp"
+  from_port         = -1
+  to_port           = -1
+  protocol          = "-1"
   cidr_blocks       = [aws_security_group.natsggroup.id]
   security_group_id = aws_security_group.pubsggroup.id
 }
