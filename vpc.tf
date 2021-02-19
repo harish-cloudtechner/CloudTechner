@@ -82,13 +82,7 @@ protocol    = "tcp"
 # value = aws_security_group.
 # }
   
-#   ingress {
-#description = "TLS from VPC"
-#from_port   = -1
-#to_port     = -1
-#protocol    = "-1"
-#    cidr_blocks = [aws_security_group.natsggroup.id] 
-# }
+
 egress {
     from_port   = 0 
     to_port     = 0
@@ -181,25 +175,49 @@ protocol    = "icmp"
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   } 
-# ingress {
-#description = "TLS from VPC"
-#from_port   = -1
-#to_port     = -1
-#protocol    = "-1"
-#    cidr_blocks = [aws_security_group.prisggroup.id] 
- #}
+ 
+  # pubsg ingress rule 
+  pubsggroup_ingress {
+description = "TLS from VPC"
+from_port   = -1
+to_port     = -1
+protocol    = "-1"
+security_groups = natsggroup 
+ }
+  
+  
+  # prisg ingress rule 
+  prisggroup_ingress {
+description = "TLS from VPC"
+from_port   = -1
+to_port     = -1
+protocol    = "-1"
+security_groups = natsggroup 
+ }
+  
+   prisggroup_ingress {
+description = "TLS from VPC"
+from_port   = 8080
+to_port     = 8080
+protocol    = "tcp"
+security_groups = pubsggroup 
+ }
+   
+# natsg ingress rule 
+  natsggroup_ingress {
+description = "TLS from VPC"
+from_port   = -1
+to_port     = -1
+protocol    = "-1"
+security_groups = prisggroup 
+ }
+
 tags = {
     Name = var.prisg_name
   }
 }
-#resource "aws_security_group_rule" "pubsggroup" {
- # type              = "ingress"
-  #from_port         = -1
-  #to_port           = -1
-  #protocol          = "-1"
-  #cidr_blocks       = [aws_security_group.natsggroup.id]
-  #security_group_id = aws_security_group.pubsggroup.id
-#}
+
+
 
 #create public instances
 resource "aws_instance" "publicinstance" {
