@@ -42,6 +42,10 @@ resource "aws_route_table" "r" {
     Name = var.routetable_name
   }
 }
+resource "aws_route_table_association" "a" {
+  subnet_id      = aws_subnet.main1.id
+  route_table_id = aws_route_table.r.id
+}
 
 
 
@@ -270,3 +274,8 @@ resource "aws_route_table" "r1" {
     Name = privatert
   }
 }
+resource "aws_route_table_association" "a1" {
+  subnet_id      = aws_subnet.main2.id
+  route_table_id = aws_route_table.r1.id
+}
+
