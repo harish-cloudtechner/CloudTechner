@@ -44,6 +44,9 @@ resource "aws_route_table" "r" {
 }
 
 
+
+
+
 #public security group
 resource "aws_security_group" "pubsggroup" {
   name        = var.pubsg_name
@@ -254,5 +257,16 @@ resource "aws_instance" "natinstance" {
   subnet_id              = aws_subnet.main1.id
   tags= {
     Name = "demo_nat_instance"
+  }
+}
+resource "aws_route_table" "r1" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = ["0.0.0.0/0"]
+    instance_id = aws_instance.natinstance.id
+  }
+ tags = {
+    Name = privatert
   }
 }
