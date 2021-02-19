@@ -28,7 +28,7 @@ tags = {
 resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.main.id
  cidr_block = "10.1.0.0/24"
-  availability_zone  = "ap-south-1c"
+  availability_zone  = "ap-south-1a"
 
 tags = {
     Name = "dbsubnet"
