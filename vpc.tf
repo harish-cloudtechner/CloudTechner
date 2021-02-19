@@ -27,7 +27,7 @@ tags = {
 
 resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.main.id
- cidr_block = "10.1.0.0/24
+ cidr_block = "10.0.0.1/24"
   availability_zone  = "ap-south-1c"
 
 tags = {
@@ -293,7 +293,7 @@ resource "aws_instance" "natinstance" {
 #   route_table_id = aws_route_table.r1.id
 # }
 resource "aws_security_group" "mydb1" {
-  name = "mydb1"
+  name = "mydb1sg"
 
   description = "RDS postgres servers (terraform-managed)"
   vpc_id = aws_vpc.main.id
@@ -321,4 +321,15 @@ resource "aws_db_subnet_group" "dbgroup" {
   tags = {
     Name = "My DB subnet group"
   }
+}
+resource "aws_db_instance" "dbinst" {
+  allocated_storage    = 20
+  storage_type         = "gp2"
+  engine               = "mysql"
+  engine_version       = "5.7"
+  instance_class       = "db.t2.micro"
+  name                 = "mydb"
+  username             = "harish"
+  password             = "harish2707"
+  parameter_group_name = "default.mysql5.7"
 }
