@@ -277,21 +277,21 @@ resource "aws_instance" "natinstance" {
     Name = "demo_nat_instance"
   }
 }
-# resource "aws_route_table" "r1" {
-#   vpc_id = aws_vpc.main.id
+resource "aws_route_table" "r1" {
+  vpc_id = aws_vpc.main.id
 
-#   route {
-#     cidr_block = ["0.0.0.0/0"]
-#     instance_id = "aws_instance.natinstance.id"
-#   }
-#  tags = {
-#     Name = "privatert"
-#   }
-# }
-# resource "aws_route_table_association" "a1" {
-#   subnet_id      = aws_subnet.main2.id
-#   route_table_id = aws_route_table.r1.id
-# }
+  route {
+    cidr_block = "0.0.0.0/0"
+    instance_id = aws_instance.natinstance.id
+  }
+ tags = {
+    Name = "privatert"
+  }
+}
+resource "aws_route_table_association" "a1" {
+  subnet_id      = aws_subnet.main2.id
+  route_table_id = aws_route_table.r1.id
+}
 resource "aws_security_group" "mydb1" {
   name = "mydb1sg"
 
