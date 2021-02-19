@@ -335,7 +335,7 @@ resource "aws_db_instance" "dbinst" {
 }
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket"
-  acl    = "public"
+  acl    = "private"
 
   tags = {
     Name        = "harish bucket"
