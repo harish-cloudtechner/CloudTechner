@@ -76,6 +76,9 @@ to_port     = 8080
 protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] 
  }
+#   output “pubsggroup” {
+# value = aws_security_group.
+# }
   
 #   ingress {
 #description = "TLS from VPC"
@@ -195,3 +198,41 @@ tags = {
   #cidr_blocks       = [aws_security_group.natsggroup.id]
   #security_group_id = aws_security_group.pubsggroup.id
 #}
+
+#create public instances
+resource "aws_instance" "publicinstance" {
+  ami                    = "ami-08e0ca9924195beba"
+  count                  =1
+  key_name               = "harish"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.pubsggroup.id]
+  subnet_id              = aws_subnet.main1.id
+  tags= {
+    Name = "demo_public_instance"
+  }
+}
+
+#create private instance
+resource "aws_instance" "privateinstance" {
+  ami                    = "ami-08e0ca9924195beba"
+  count                  =1
+  key_name               = "harish"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.prisggroup.id]
+  subnet_id              = aws_subnet.main2.id
+  tags= {
+    Name = "demo_private_instance"
+  }
+}
+#create nat instance
+resource "aws_instance" "natinstance" {
+  ami                    = "ami-00999044593c895de"
+  count                  =1
+  key_name               = "harish"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.natsggroup.id]
+  subnet_id              = aws_subnet.main1.id
+  tags= {
+    Name = "demo_nat_instance"
+  }
+}
