@@ -272,10 +272,10 @@ resource "aws_route_table" "r1" {
 
   route {
     cidr_block = ["0.0.0.0/0"]
-    instance_id = aws_instance.natinstance.id
+    instance_id = [aws_instance.natinstance.id]
   }
  tags = {
-    Name = privatert
+    Name = "privatert"
   }
 }
 resource "aws_route_table_association" "a1" {
