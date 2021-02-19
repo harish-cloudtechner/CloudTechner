@@ -316,7 +316,7 @@ resource "aws_security_group" "mydb1" {
 }
 resource "aws_db_subnet_group" "dbgroup" {
   name       = "dbsubgroup"
-  subnet_ids = [aws_subnet.main2.id, aws_subnet.main3.id]
+  subnet_ids = [aws_subnet.main1.id, aws_subnet.main2.id, aws_subnet.main3.id]
 
   tags = {
     Name = "My DB subnet group"
