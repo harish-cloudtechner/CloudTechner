@@ -24,6 +24,16 @@ tags = {
     Name = var.prisubnet_name
   }
 }
+
+resource "aws_subnet" "main3" {
+  vpc_id     = aws_vpc.main.id
+ cidr_block = "10.1.0.0/24
+  availability_zone  = "ap-south-1c"
+
+tags = {
+    Name = "dbsubnet"
+  }
+}
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
@@ -267,19 +277,48 @@ resource "aws_instance" "natinstance" {
     Name = "demo_nat_instance"
   }
 }
-resource "aws_route_table" "r1" {
+# resource "aws_route_table" "r1" {
+#   vpc_id = aws_vpc.main.id
+
+#   route {
+#     cidr_block = ["0.0.0.0/0"]
+#     instance_id = "aws_instance.natinstance.id"
+#   }
+#  tags = {
+#     Name = "privatert"
+#   }
+# }
+# resource "aws_route_table_association" "a1" {
+#   subnet_id      = aws_subnet.main2.id
+#   route_table_id = aws_route_table.r1.id
+# }
+resource "aws_security_group" "mydb1" {
+  name = "mydb1"
+
+  description = "RDS postgres servers (terraform-managed)"
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = ["0.0.0.0/0"]
-    instance_id = [aws_instance.natinstance.id[0]]
+  # Only postgres in
+  ingress {
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
- tags = {
-    Name = "privatert"
-  }
-}
-resource "aws_route_table_association" "a1" {
-  subnet_id      = aws_subnet.main2.id
-  route_table_id = aws_route_table.r1.id
-}
 
+  # Allow all outbound traffic.
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_db_subnet_group" "dbgroup" {
+  name       = "dbsubgroup"
+  subnet_ids = [aws_subnet.main2.id, aws_subnet.main3.id]
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
