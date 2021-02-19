@@ -333,7 +333,7 @@ resource "aws_db_instance" "dbinst" {
   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
 }
 resource "aws_s3_bucket" "b" {
-  bucket = "terraformbuck"
+  bucket = "terraformbuckhari"
   acl    = "private"
 
   tags = {
@@ -344,7 +344,7 @@ resource "aws_s3_bucket" "b" {
 terraform {
   backend "s3" {
     # Replace this with your bucket name!
-    bucket         = "terraformbuck"
+    bucket         = "terraformbuckhari"
     key            = "global/s3/terraform.tfstate"
     region         = "ap-south-1"
     encrypt        = true
