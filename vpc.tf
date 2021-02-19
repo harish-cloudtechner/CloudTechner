@@ -6,15 +6,20 @@ resource "aws_vpc" "main" {
     Name = var.vpc_name
   }
 }
+
+
 resource "aws_subnet" "main1" {
   vpc_id     = aws_vpc.main.id
   cidr_block = var.pubcidr_block
    availability_zone  = "ap-south-1a"
+  map_public_ip_on_launch = "true"
 
   tags = {
     Name = var.pubsubnet_name
   }
 }
+
+
 resource "aws_subnet" "main2" {
   vpc_id     = aws_vpc.main.id
 cidr_block = var.pricidr_block
@@ -335,7 +340,7 @@ resource "aws_s3_bucket" "b" {
   acl    = "private"
 
   tags = {
-    Name        = "teraform_bucket"
+    Name        = "cloud_bucket"
     Environment = "default"
   }
 }
