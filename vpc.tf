@@ -32,7 +32,7 @@ tags = {
 
 resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.main.id
- cidr_block = var.dbcidr_block
+ cidr_block = "10.0.3.0/24"
   availability_zone  = "ap-south-1b"
 
 tags = {
