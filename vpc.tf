@@ -254,7 +254,7 @@ resource "aws_instance" "publicinstance" {
 
 #create private instance
 resource "aws_instance" "privateinstance" {
-  ami                    = "ami-08e0ca9924195be
+  ami                    = "ami-08e0ca9924195be"
   key_name               = "harish"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
