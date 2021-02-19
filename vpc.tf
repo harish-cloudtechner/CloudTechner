@@ -1,4 +1,86 @@
-resource "aws_vpc" "main" {
+import os
+
+project=str(input("Enter project name: "))
+
+cidr=str(input("Enter cidr block for vpc: "))
+
+scidr=str(input("enter cidr block for public subnet: "))
+
+pcidr=str(input("Enter cidr block for private subnet: "))
+
+rcidr=str(input("Enter cidr block for rds subnet: "))
+
+terraformtfvars="""region = "ap-south-1"
+environment_name = "default"
+project_name = "credential"
+vpc_name = "demo-vpc"
+cidr_block = "x"
+pubsubnet_name = "demopub-sub"
+pubcidr_block = "y"
+prisubnet_name = "demopri-sub"
+pricidr_block = "z"
+igw_name = "demo-igw"
+routetable_name = "demo-pubrt"
+#routecidr_block = "0.0.0.0/0"
+pubsg_name = "demopubsg1"
+prisg_name = "demoprisg1"
+natsg_name = "demonatsg1"
+dbsub_name = "demodbsubnet"
+publicinst_name = "demopubint"
+privateins_name = "demo-priinst"
+natinst_name    = "demo-natinst"
+privateroutetable_name = "demo-prirt" """
+terraformtfvars =terraformtfvars.replace("x",cidr)
+terraformtfvars = terraformtfvars.replace("y",scidr)
+terraformtfvars = terraformtfvars.replace("z",pcidr)
+#terraformtfvars = terraformtfvars.replace("10.0.3.0/24",rcidr)
+terraformtfvars = terraformtfvars.replace("demo",project)
+file = open("terraform.tfvars", "w") 
+file.write(terraformtfvars) 
+file.close()
+
+variables="""variable "region" {}
+variable "environment_name" {}
+variable "project_name" {}
+variable "cidr_block" {}
+variable "vpc_name" {}
+variable "pubcidr_block" {}
+variable "pubsubnet_name" {}
+variable "pricidr_block" {}
+variable "prisubnet_name" {}
+variable "igw_name" {}
+variable "routecidr_block" {}
+variable "routetable_name" {}
+variable "pubsg_name" {}
+variable "prisg_name" {}
+variable "natsg_name" {}
+variable "dbsub_name" {}
+variable "publicinst_name" {}
+variable "privateins_name" {}
+variable "natinst_name" {}
+variable "privateroutetable_name" {}"""
+file = open("variables.tf", "w") 
+file.write(variables) 
+file.close()
+
+project_credentials="""[default]
+aws_access_key_id = AKIAJLHEZ34MNBHGEVBA
+aws_secret_access_key = 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"""
+file = open("project.credentials", "w") 
+file.write(project_credentials) 
+file.close()
+
+provider="""provider "aws" {
+shared_credentials_file = "${var.project_name}.credential"
+region  = var.region
+profile = var.environment_name
+}"""
+file = open("provider.tf", "w") 
+file.write(provider) 
+file.close()
+
+
+assignment="""resource "aws_vpc" "main" {
   cidr_block       = var.cidr_block
   instance_tenancy = "default"
 
@@ -331,6 +413,8 @@ resource "aws_db_instance" "dbinst" {
   username             = "harish"
   password             = "harish2707"
   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
+  final_snapshot_identifier = "final-snapshot"
+  skip_final_snapshot = true
 }
 # resource "aws_s3_bucket" "b" {
 #   bucket = "terraformbuckhari"
@@ -349,4 +433,11 @@ terraform {
     region         = "ap-south-1"
     encrypt        = true
   }
-}
+}"""
+file = open("vpc.tf", "w") 
+file.write(assignment) 
+file.close()
+os.system('terraform init')
+os.system('terraform validate')
+os.system('terraform plan')
+os.system('terraform apply')
