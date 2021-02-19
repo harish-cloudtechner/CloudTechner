@@ -272,7 +272,7 @@ resource "aws_route_table" "r1" {
 
   route {
     cidr_block = ["0.0.0.0/0"]
-    instance_id = [aws_instance.natinstance.id]
+    instance_id = [aws_instance.natinstance.id[0]]
   }
  tags = {
     Name = "privatert"
