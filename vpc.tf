@@ -66,77 +66,8 @@ resource "aws_route_table_association" "a" {
 
 
 
-#public security group
-resource "aws_security_group" "pubsggroup" {
-  name        = var.pubsg_name
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-ingress {
-description = "TLS from VPC"
-from_port   = 80
-to_port     = 80
-protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-ingress {
-description = "TLS from VPC"
-from_port   = 22
-to_port     = 22
-protocol    = "tcp"
-    cidr_blocks = ["13.233.177.0/29"] 
- }
-  ingress {
-description = "TLS from VPC"
-from_port   = 8080
-to_port     = 8080
-protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
- }
-#   output “pubsggroup” {
-# value = aws_security_group.
-# }
-  
-
-egress {
-    from_port   = 0 
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  } 
-    
-  tags = {
-    Name = var.pubsg_name
-  }
-}
 
 
-#private security group
-resource "aws_security_group" "prisggroup" {
-  name        = var.prisg_name
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.1.0/24"]
-  }
-  egress {
-    from_port   = 0 
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  } 
 #ingress {
 #escription = "TLS from VPC"
 #from_port   = 8080
@@ -201,33 +132,102 @@ protocol    = "icmp"
     Name = var.natsg_name
   }
 }
- 
-#   # pubsg ingress rule 
-#   pubsggroup_ingress {
-# description = "TLS from VPC"
-# from_port   = -1
-# to_port     = -1
-# protocol    = "-1"
-# security_groups = natsggroup 
-#  }
+
+
+#public security group
+resource "aws_security_group" "pubsggroup" {
+  name        = var.pubsg_name
+  description = "Allow TLS inbound traffic"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ingress {
+description = "TLS from VPC"
+from_port   = 80
+to_port     = 80
+protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ingress {
+description = "TLS from VPC"
+from_port   = 22
+to_port     = 22
+protocol    = "tcp"
+    cidr_blocks = ["13.233.177.0/29"] 
+ }
+  ingress {
+description = "TLS from VPC"
+from_port   = 8080
+to_port     = 8080
+protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] 
+ }
+   ingress {
+ description = "TLS from VPC"
+ from_port   = -1
+ to_port     = -1
+ protocol    = "-1"
+ security_groups = aws_security_group.natsggroup.id
+  }
+
+egress {
+    from_port   = 0 
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
+    
+  tags = {
+    Name = var.pubsg_name
+  }
+}
+
+
+#private security group
+resource "aws_security_group" "prisggroup" {
+  name        = var.prisg_name
+  description = "Allow TLS inbound traffic"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.1.0/24"]
+  }
+    
+  ingress {
+description = "TLS from VPC"
+from_port   = -1
+to_port     = -1
+protocol    = "-1"
+security_groups = aws_security_group.natsggroup.id
+ }
   
-  
-#   # prisg ingress rule 
-#   prisggroup_ingress {
-# description = "TLS from VPC"
-# from_port   = -1
-# to_port     = -1
-# protocol    = "-1"
-# security_groups = natsggroup 
-#  }
-  
-#    prisggroup_ingress {
-# description = "TLS from VPC"
-# from_port   = 8080
-# to_port     = 8080
-# protocol    = "tcp"
-# security_groups = pubsggroup 
-#  }
+   ingress {
+description = "TLS from VPC"
+from_port   = 8080
+to_port     = 8080
+protocol    = "tcp"
+security_groups = aws_security_group.pubsggroup.id
+ }
+  egress {
+    from_port   = 0 
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
+  tags = {
+    Name = var.prisg_name
+  }
+}
    
 # # natsg ingress rule 
 #   natsggroup_ingress {
