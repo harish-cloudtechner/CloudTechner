@@ -183,46 +183,46 @@ protocol    = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
   } 
  
-  # pubsg ingress rule 
-  pubsggroup_ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-security_groups = natsggroup 
- }
+#   # pubsg ingress rule 
+#   pubsggroup_ingress {
+# description = "TLS from VPC"
+# from_port   = -1
+# to_port     = -1
+# protocol    = "-1"
+# security_groups = natsggroup 
+#  }
   
   
-  # prisg ingress rule 
-  prisggroup_ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-security_groups = natsggroup 
- }
+#   # prisg ingress rule 
+#   prisggroup_ingress {
+# description = "TLS from VPC"
+# from_port   = -1
+# to_port     = -1
+# protocol    = "-1"
+# security_groups = natsggroup 
+#  }
   
-   prisggroup_ingress {
-description = "TLS from VPC"
-from_port   = 8080
-to_port     = 8080
-protocol    = "tcp"
-security_groups = pubsggroup 
- }
+#    prisggroup_ingress {
+# description = "TLS from VPC"
+# from_port   = 8080
+# to_port     = 8080
+# protocol    = "tcp"
+# security_groups = pubsggroup 
+#  }
    
-# natsg ingress rule 
-  natsggroup_ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "-1"
-security_groups = prisggroup 
- }
+# # natsg ingress rule 
+#   natsggroup_ingress {
+# description = "TLS from VPC"
+# from_port   = -1
+# to_port     = -1
+# protocol    = "-1"
+# security_groups = prisggroup 
+#  }
 
-tags = {
-    Name = var.prisg_name
-  }
-}
+# tags = {
+#     Name = var.prisg_name
+#   }
+# }
 
 
 
