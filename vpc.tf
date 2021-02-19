@@ -76,6 +76,7 @@ to_port     = 8080
 protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] 
  }
+  
 #   ingress {
 #description = "TLS from VPC"
 #from_port   = -1
@@ -173,4 +174,12 @@ protocol    = "icmp"
 tags = {
     Name = var.prisg_name
   }
+}
+resource "aws_security_group_rule" "pubsggroup" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = [aws_security_group.natsggroup.id]
+  security_group_id = aws_security_group.pubsggroup.id
 }
