@@ -32,11 +32,11 @@ tags = {
 
 resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.main.id
- cidr_block = "10.0.3.0/24"
+ cidr_block = var.dbcidr_block
   availability_zone  = "ap-south-1b"
 
 tags = {
-    Name = "dbterasub"
+    Name = var.dbsub_name
   }
 }
 resource "aws_internet_gateway" "gw" {
@@ -250,7 +250,7 @@ resource "aws_instance" "publicinstance" {
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
   subnet_id              = aws_subnet.main1.id
   tags= {
-    Name = "demo_public_instance"
+    Name = var.publicinst_name
   }
 }
 
@@ -262,7 +262,7 @@ resource "aws_instance" "privateinstance" {
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
   subnet_id              = aws_subnet.main2.id
   tags= {
-    Name = "demo_private_instance"
+    Name = var.privateins_name
   }
 }
 #create nat instance
@@ -273,7 +273,7 @@ resource "aws_instance" "natinstance" {
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
   subnet_id              = aws_subnet.main1.id
   tags= {
-    Name = "demo_nat_instance"
+    Name = var.natinst_name
   }
 }
 resource "aws_route_table" "r1" {
@@ -284,35 +284,35 @@ resource "aws_route_table" "r1" {
     instance_id = aws_instance.natinstance.id
   }
  tags = {
-    Name = "privatert"
+    Name = var.privateroutetable_name
   }
 }
 resource "aws_route_table_association" "a1" {
   subnet_id      = aws_subnet.main2.id
   route_table_id = aws_route_table.r1.id
 }
-resource "aws_security_group" "mydb1" {
-  name = "mydb1sg"
+# resource "aws_security_group" "mydb1" {
+#   name = "mydb1sg"
 
-  description = "RDS postgres servers (terraform-managed)"
-  vpc_id = aws_vpc.main.id
+#   description = "RDS postgres servers (terraform-managed)"
+#   vpc_id = aws_vpc.main.id
 
-  # Only postgres in
-  ingress {
-    from_port = 3306
-    to_port = 3306
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+#   # Only postgres in
+#   ingress {
+#     from_port = 3306
+#     to_port = 3306
+#     protocol = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-  # Allow all outbound traffic.
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+#   # Allow all outbound traffic.
+#   egress {
+#     from_port = 0
+#     to_port = 0
+#     protocol = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
 resource "aws_db_subnet_group" "dbgroup" {
   name       = "dbsubgroup"
   subnet_ids = [aws_subnet.main1.id, aws_subnet.main2.id, aws_subnet.main3.id]
@@ -332,19 +332,19 @@ resource "aws_db_instance" "dbinst" {
   password             = "harish2707"
   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
 }
-resource "aws_s3_bucket" "b" {
-  bucket = "terraformbuckhari"
-  acl    = "private"
+# resource "aws_s3_bucket" "b" {
+#   bucket = "terraformbuckhari"
+#   acl    = "private"
 
-  tags = {
-    Name        = "cloud_bucket"
-    Environment = "default"
-  }
-}
+#   tags = {
+#     Name        = "cloud_bucket"
+#     Environment = "default"
+#   }
+# }
 terraform {
   backend "s3" {
     # Replace this with your bucket name!
-    bucket         = "terraformbuckhari"
+    bucket         = "terabuck"
     key            = "global/s3/terraform.tfstate"
     region         = "ap-south-1"
     encrypt        = true
