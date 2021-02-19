@@ -82,10 +82,7 @@ resource "aws_route_table_association" "a" {
 #protocol    = "-1"
 #    cidr_blocks = [aws_security_group.natsggroup.id] 
  #}
-tags = {
-    Name = var.prisg_name
-  }
-}
+
 
 
 #nat security group
