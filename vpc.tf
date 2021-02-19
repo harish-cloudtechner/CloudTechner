@@ -84,12 +84,12 @@ protocol    = "tcp"
 #protocol    = "-1"
 #    cidr_blocks = [aws_security_group.natsggroup.id] 
 # }
-#egress {
-#    from_port   = 0 
-#    to_port     = 0
-#    protocol    = "-1"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  } 
+egress {
+    from_port   = 0 
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
     
   tags = {
     Name = var.pubsg_name
@@ -110,6 +110,12 @@ resource "aws_security_group" "prisggroup" {
     protocol    = "tcp"
     cidr_blocks = ["10.0.1.0/24"]
   }
+  egress {
+    from_port   = 0 
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
 #ingress {
 #escription = "TLS from VPC"
 #from_port   = 8080
@@ -164,7 +170,13 @@ to_port     = -1
 protocol    = "icmp"
     cidr_blocks = ["10.0.2.0/24"] 
  }
- # ingress {
+  egress {
+    from_port   = 0 
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
+# ingress {
 #description = "TLS from VPC"
 #from_port   = -1
 #to_port     = -1
@@ -175,11 +187,11 @@ tags = {
     Name = var.prisg_name
   }
 }
-resource "aws_security_group_rule" "pubsggroup" {
-  type              = "ingress"
-  from_port         = -1
-  to_port           = -1
-  protocol          = "-1"
-  cidr_blocks       = [aws_security_group.natsggroup.id]
-  security_group_id = aws_security_group.pubsggroup.id
-}
+#resource "aws_security_group_rule" "pubsggroup" {
+ # type              = "ingress"
+  #from_port         = -1
+  #to_port           = -1
+  #protocol          = "-1"
+  #cidr_blocks       = [aws_security_group.natsggroup.id]
+  #security_group_id = aws_security_group.pubsggroup.id
+#}
