@@ -243,7 +243,6 @@ protocol    = "icmp"
 #create public instances
 resource "aws_instance" "publicinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  count                  =1
   key_name               = "harish"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
@@ -255,8 +254,7 @@ resource "aws_instance" "publicinstance" {
 
 #create private instance
 resource "aws_instance" "privateinstance" {
-  ami                    = "ami-08e0ca9924195beba"
-  count                  =1
+  ami                    = "ami-08e0ca9924195be
   key_name               = "harish"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
@@ -268,7 +266,6 @@ resource "aws_instance" "privateinstance" {
 #create nat instance
 resource "aws_instance" "natinstance" {
   ami                    = "ami-00999044593c895de"
-  count                  =1
   key_name               = "harish"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
