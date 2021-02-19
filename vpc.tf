@@ -18,7 +18,7 @@ resource "aws_subnet" "main1" {
 resource "aws_subnet" "main2" {
   vpc_id     = aws_vpc.main.id
 cidr_block = var.pricidr_block
-  availability_zone  = "ap-south-1b"
+  availability_zone  = "ap-south-1a"
 
 tags = {
     Name = var.prisubnet_name
@@ -28,7 +28,7 @@ tags = {
 resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.main.id
  cidr_block = "10.0.3.0/24"
-  availability_zone  = "ap-south-1a"
+  availability_zone  = "ap-south-1b"
 
 tags = {
     Name = "dbterasub"
