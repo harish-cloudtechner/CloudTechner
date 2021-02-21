@@ -282,22 +282,20 @@ resource "aws_security_group" "prisggroup" {
     protocol    = "tcp"
     cidr_blocks = ["10.0.1.0/24"]
   }
+  ingress {
+      from_port   = -1
+      to_port     = -1
+      protocol    = "icmp"
+      security_groups = [aws_security_group.natsggroup.id]
+  }
+  ingress {
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      security_groups = [aws_security_group.pubsggroup.id]
+  }
     
-#   ingress {
-# description = "TLS from VPC"
-# from_port   = -1
-# to_port     = -1
-# protocol    = "-1"
-# security_groups = aws_security_group.natsggroup.id
-#  }
-  
-#    ingress {
-# description = "TLS from VPC"
-# from_port   = 8080
-# to_port     = 8080
-# protocol    = "tcp"
-# security_groups = aws_security_group.pubsggroup.id
-#  }
+
   egress {
     from_port   = 0 
     to_port     = 0
@@ -309,19 +307,7 @@ resource "aws_security_group" "prisggroup" {
   }
 }
    
-# # natsg ingress rule 
-#   natsggroup_ingress {
-# description = "TLS from VPC"
-# from_port   = -1
-# to_port     = -1
-# protocol    = "-1"
-# security_groups = prisggroup 
-#  }
 
-# tags = {
-#     Name = var.prisg_name
-#   }
-# }
 
 
 
@@ -355,6 +341,7 @@ resource "aws_instance" "natinstance" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
   subnet_id              = aws_subnet.main1.id
+  source_dest_check      = "false"
   tags= {
     Name = var.natinst_name
   }
