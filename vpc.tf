@@ -63,11 +63,11 @@ file = open("variables.tf", "w")
 file.write(variables) 
 file.close()
 
-project_credentials="""[default]
+credentials="""[default]
 aws_access_key_id = AKIAJLHEZ34MNBHGEVBA
 aws_secret_access_key = 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"""
-file = open("credential", "w") 
-file.write(credential) 
+file = open("credentials", "w") 
+file.write(credentials) 
 file.close()
 
 provider="""provider "aws" {
@@ -438,7 +438,7 @@ terraform {
 file = open("vpc.tf", "w") 
 file.write(assignment) 
 file.close()
-os.system("terraform init")
-os.system("terraform validate")
-os.system("terraform plan")
-os.system("terraform apply")
+os.system('terraform init')
+os.system('terraform validate')
+os.system('terraform plan')
+os.system('terraform apply')
