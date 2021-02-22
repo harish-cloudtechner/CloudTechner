@@ -413,15 +413,15 @@ resource "aws_db_instance" "dbinst" {
 #     Environment = "default"
 #   }
 # }
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "terabuck"
-    key            = "global/s3/terraform.tfstate"
-    region         = "ap-south-1"
-    encrypt        = true
-  }
-  }
+#terraform {
+#  backend "s3" {
+#    # Replace this with your bucket name!
+#    bucket         = "terabuck"
+#    key            = "global/s3/terraform.tfstate"
+#    region         = "ap-south-1"
+#    encrypt        = true
+#  }
+#  }
 # }"""
 # file = open("vpc.tf", "w") 
 # file.write(assignment) 
