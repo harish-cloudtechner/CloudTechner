@@ -314,7 +314,7 @@ resource "aws_security_group" "prisggroup" {
 #create public instances
 resource "aws_instance" "publicinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  key_name               = "harish"
+  key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
   subnet_id              = aws_subnet.main1.id
@@ -326,7 +326,7 @@ resource "aws_instance" "publicinstance" {
 #create private instance
 resource "aws_instance" "privateinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  key_name               = "harish"
+  key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
   subnet_id              = aws_subnet.main2.id
@@ -337,7 +337,7 @@ resource "aws_instance" "privateinstance" {
 #create nat instance
 resource "aws_instance" "natinstance" {
   ami                    = "ami-00999044593c895de"
-  key_name               = "harish"
+  key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
   subnet_id              = aws_subnet.main1.id
