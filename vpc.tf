@@ -169,49 +169,49 @@ resource "aws_route_table_association" "a" {
 
 
 #nat security group
-resource "aws_security_group" "natsggroup" {
-  name        = var.natsg_name
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.main.id
+# resource "aws_security_group" "natsggroup" {
+#   name        = var.natsg_name
+#   description = "Allow TLS inbound traffic"
+#   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-ingress {
-description = "TLS from VPC"
-from_port   = 443
-to_port     = 443
-protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
-  }
-  ingress {
-description = "TLS from VPC"
-from_port   = 80
-to_port     = 80
-protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
-  }
-ingress {
-description = "TLS from VPC"
-from_port   = -1
-to_port     = -1
-protocol    = "icmp"
-    cidr_blocks = ["10.0.2.0/24"] 
- }
-  egress {
-    from_port   = 0 
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  } 
-  tags = {
-    Name = var.natsg_name
-  }
-}
+#   ingress {
+#     description = "TLS from VPC"
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# ingress {
+# description = "TLS from VPC"
+# from_port   = 443
+# to_port     = 443
+# protocol    = "tcp"
+#     cidr_blocks = ["10.0.2.0/24"]
+#   }
+#   ingress {
+# description = "TLS from VPC"
+# from_port   = 80
+# to_port     = 80
+# protocol    = "tcp"
+#     cidr_blocks = ["10.0.2.0/24"]
+#   }
+# ingress {
+# description = "TLS from VPC"
+# from_port   = -1
+# to_port     = -1
+# protocol    = "icmp"
+#     cidr_blocks = ["10.0.2.0/24"] 
+#  }
+#   egress {
+#     from_port   = 0 
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   } 
+#   tags = {
+#     Name = var.natsg_name
+#   }
+# }
 
 
 #public security group
@@ -270,42 +270,42 @@ egress {
 
 
 #private security group
-resource "aws_security_group" "prisggroup" {
-  name        = var.prisg_name
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.main.id
+# resource "aws_security_group" "prisggroup" {
+#   name        = var.prisg_name
+#   description = "Allow TLS inbound traffic"
+#   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.1.0/24"]
-  }
-  ingress {
-      from_port   = -1
-      to_port     = -1
-      protocol    = "icmp"
-      security_groups = [aws_security_group.natsggroup.id]
-  }
-  ingress {
-      from_port   = 8080
-      to_port     = 8080
-      protocol    = "tcp"
-      security_groups = [aws_security_group.pubsggroup.id]
-  }
+#   ingress {
+#     description = "TLS from VPC"
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["10.0.1.0/24"]
+#   }
+#   ingress {
+#       from_port   = -1
+#       to_port     = -1
+#       protocol    = "icmp"
+#       security_groups = [aws_security_group.natsggroup.id]
+#   }
+#   ingress {
+#       from_port   = 8080
+#       to_port     = 8080
+#       protocol    = "tcp"
+#       security_groups = [aws_security_group.pubsggroup.id]
+#   }
     
 
-  egress {
-    from_port   = 0 
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  } 
-  tags = {
-    Name = var.prisg_name
-  }
-}
+#   egress {
+#     from_port   = 0 
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   } 
+#   tags = {
+#     Name = var.prisg_name
+#   }
+# }
    
 
 
@@ -324,43 +324,43 @@ resource "aws_instance" "publicinstance" {
 }
 
 #create private instance
-resource "aws_instance" "privateinstance" {
-  ami                    = "ami-08e0ca9924195beba"
-  key_name               = "singh"
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.prisggroup.id]
-  subnet_id              = aws_subnet.main2.id
-  tags= {
-    Name = var.privateins_name
-  }
-}
+# resource "aws_instance" "privateinstance" {
+#   ami                    = "ami-08e0ca9924195beba"
+#   key_name               = "singh"
+#   instance_type          = "t2.micro"
+#   vpc_security_group_ids = [aws_security_group.prisggroup.id]
+#   subnet_id              = aws_subnet.main2.id
+#   tags= {
+#     Name = var.privateins_name
+#   }
+# }
 #create nat instance
-resource "aws_instance" "natinstance" {
-  ami                    = "ami-00999044593c895de"
-  key_name               = "singh"
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.natsggroup.id]
-  subnet_id              = aws_subnet.main1.id
-  source_dest_check      = "false"
-  tags= {
-    Name = var.natinst_name
-  }
-}
-resource "aws_route_table" "r1" {
-  vpc_id = aws_vpc.main.id
+# resource "aws_instance" "natinstance" {
+#   ami                    = "ami-00999044593c895de"
+#   key_name               = "singh"
+#   instance_type          = "t2.micro"
+#   vpc_security_group_ids = [aws_security_group.natsggroup.id]
+#   subnet_id              = aws_subnet.main1.id
+#   source_dest_check      = "false"
+#   tags= {
+#     Name = var.natinst_name
+#   }
+# }
+# resource "aws_route_table" "r1" {
+#   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    instance_id = aws_instance.natinstance.id
-  }
- tags = {
-    Name = var.privateroutetable_name
-  }
-}
-resource "aws_route_table_association" "a1" {
-  subnet_id      = aws_subnet.main2.id
-  route_table_id = aws_route_table.r1.id
-}
+#   route {
+#     cidr_block = "0.0.0.0/0"
+#     instance_id = aws_instance.natinstance.id
+#   }
+#  tags = {
+#     Name = var.privateroutetable_name
+#   }
+#}
+# resource "aws_route_table_association" "a1" {
+#   subnet_id      = aws_subnet.main2.id
+#   route_table_id = aws_route_table.r1.id
+# }
 # resource "aws_security_group" "mydb1" {
 #   name = "mydb1sg"
 
@@ -383,27 +383,27 @@ resource "aws_route_table_association" "a1" {
 #     cidr_blocks = ["0.0.0.0/0"]
 #   }
 # }
-resource "aws_db_subnet_group" "dbgroup" {
-  name       = "dbsubgroup"
-  subnet_ids = [aws_subnet.main1.id, aws_subnet.main2.id, aws_subnet.main3.id]
+# resource "aws_db_subnet_group" "dbgroup" {
+#   name       = "dbsubgroup"
+#   subnet_ids = [aws_subnet.main1.id, aws_subnet.main2.id, aws_subnet.main3.id]
 
-  tags = {
-    Name = "My DB subnet group"
-  }
-}
-resource "aws_db_instance" "dbinst" {
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t2.micro"
-  name                 = "mydb"
-  username             = "harish"
-  password             = "harish2707"
-  db_subnet_group_name = aws_db_subnet_group.dbgroup.id
-  final_snapshot_identifier = "final-snapshot"
-  skip_final_snapshot = true
-}
+#   tags = {
+#     Name = "My DB subnet group"
+#   }
+# }
+# resource "aws_db_instance" "dbinst" {
+#   allocated_storage    = 20
+#   storage_type         = "gp2"
+#   engine               = "mysql"
+#   engine_version       = "5.7"
+#   instance_class       = "db.t2.micro"
+#   name                 = "mydb"
+#   username             = "harish"
+#   password             = "harish2707"
+#   db_subnet_group_name = aws_db_subnet_group.dbgroup.id
+#   final_snapshot_identifier = "final-snapshot"
+#   skip_final_snapshot = true
+# }
 # resource "aws_s3_bucket" "b" {
 #   bucket = "terraformbuckhari"
 #   acl    = "private"
