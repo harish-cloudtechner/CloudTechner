@@ -204,7 +204,7 @@ resource "aws_instance" "publicinstance" {
   key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
-  subnet_id              = aws_subnet.main1.id
+  subnet_id              = aws_subnet.subnet1.id
   tags= {
     Name = var.publicinst_name
   }
@@ -216,7 +216,7 @@ resource "aws_instance" "privateinstance" {
   key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
-  subnet_id              = aws_subnet.main2.id
+  subnet_id              = aws_subnet.subnet2.id
   tags= {
     Name = var.privateins_name
   }
@@ -227,7 +227,7 @@ resource "aws_instance" "natinstance" {
   key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
-  subnet_id              = aws_subnet.main1.id
+  subnet_id              = aws_subnet.subnet1.id
   source_dest_check      = "false"
   tags= {
     Name = var.natinst_name
