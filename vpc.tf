@@ -201,7 +201,7 @@ resource "aws_security_group" "prisggroup" {
 #create public instances
 resource "aws_instance" "publicinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  key_name               = "ansible"
+  key_name               = "singh"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
   subnet_id              = aws_subnet.main1.id
@@ -244,8 +244,8 @@ resource "aws_route_table" "r1" {
     Name = var.privateroutetable_name
   }
 }
-resource "aws_route_table_association" "a1" {
-  subnet_id      = aws_subnet.main2.id
+resource "aws_route_table_association" "a2" {
+  subnet_id      = aws_subnet.subnet2.id
   route_table_id = aws_route_table.r1.id
 }
 # resource "aws_security_group" "mydb1" {
