@@ -241,7 +241,7 @@ resource "aws_route_table" "r1" {
     instance_id = aws_instance.natinstance.id
   }
  tags = {
-    Name = var.privateroutetable_name
+    Name = var.prirt_name
   }
 }
 resource "aws_route_table_association" "a2" {
