@@ -73,21 +73,21 @@ description = "TLS from VPC"
 from_port   = 443
 to_port     = 443
 protocol    = "tcp"
-    cidr_blocks = "${cidrsubnet(var.cidr_block,8,6)}"
+    cidr_blocks = [cidrsubnet(var.cidr_block,8,6)]
   }
   ingress {
 description = "TLS from VPC"
 from_port   = 80
 to_port     = 80
 protocol    = "tcp"
-    cidr_blocks = "${cidrsubnet(var.cidr_block,8,6)}"
+    cidr_blocks = [cidrsubnet(var.cidr_block,8,6)]
   }
 ingress {
 description = "TLS from VPC"
 from_port   = -1
 to_port     = -1
 protocol    = "icmp"
-    cidr_blocks = "${cidrsubnet(var.cidr_block,8,6)}"
+    cidr_blocks = [cidrsubnet(var.cidr_block,8,6)]
  }
   egress {
     from_port   = 0 
@@ -128,6 +128,13 @@ to_port     = 22
 protocol    = "tcp"
     cidr_blocks = ["13.233.177.0/29"] 
  }
+ingress {
+description = "TLS from VPC"
+from_port   = 22
+to_port     = 22
+protocol    = "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
   ingress {
 description = "TLS from VPC"
 from_port   = 8080
@@ -137,8 +144,8 @@ protocol    = "tcp"
  }
    ingress {
  description = "TLS from VPC"
- from_port   = -1
- to_port     = -1
+ from_port   = 0
+ to_port     = 0
  protocol    = "-1"
  security_groups = [aws_security_group.natsggroup.id]
   }
@@ -167,7 +174,7 @@ resource "aws_security_group" "prisggroup" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = "${cidrsubnet(var.cidr_block,8,4)}"
+    cidr_blocks = [cidrsubnet(var.cidr_block,8,4)]
   }
   ingress {
       from_port   = -1
@@ -201,19 +208,36 @@ resource "aws_security_group" "prisggroup" {
 #create public instances
 resource "aws_instance" "publicinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  key_name               = "singh"
+  key_name               = "ctkey"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.pubsggroup.id]
   subnet_id              = aws_subnet.subnet1.id
   tags= {
     Name = var.publicinst_name
   }
+provisioner "remote-exec" {
+inline = [
+	"echo 'build ssh connection' "
+]
+connection {
+	host = self.public_ip
+	user = "ec2-user"
+	type = "ssh"
+	private_key = file("./harish")
+}
+}
+#provisioner "local-exec" {
+#	command = "echo  ${aws_instance.publicinstance.public_ip} >> addgel4" 
+#}
+provisioner "local-exec" {
+	command = "ansible-playbook -i ${aws_instance.publicinstance.public_ip}  play.yml --private-key=harish" 
+}
 }
 
 #create private instance
 resource "aws_instance" "privateinstance" {
   ami                    = "ami-08e0ca9924195beba"
-  key_name               = "singh"
+  key_name               = "ctkey"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.prisggroup.id]
   subnet_id              = aws_subnet.subnet2.id
@@ -224,7 +248,7 @@ resource "aws_instance" "privateinstance" {
 #create nat instance
 resource "aws_instance" "natinstance" {
   ami                    = "ami-00999044593c895de"
-  key_name               = "singh"
+  key_name               = "ctkey"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.natsggroup.id]
   subnet_id              = aws_subnet.subnet1.id
