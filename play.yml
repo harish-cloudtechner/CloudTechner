@@ -1,0 +1,5 @@
+- hosts: localhost
+  tasks:
+        - shell: "echo 'welcome to india' > /home/ec2-user/harish" 
+
+
