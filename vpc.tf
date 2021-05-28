@@ -10,8 +10,8 @@ resource "aws_vpc" "main"{
   }
   resource "aws_subnet" "subnet1" {
   vpc_id     = aws_vpc.main.id
-cidr_block = "${cidrsubnet(var.cidr_block,8,4)}"
-  availability_zone  = "${ data.aws_availability_zones.azs.names[0]}"
+cidr_block = cidrsubnet(var.cidr_block,8,4)
+  availability_zone  = data.aws_availability_zones.azs.names[0]
   map_public_ip_on_launch = "true"
     
 tags = {
@@ -21,8 +21,8 @@ tags = {
 }
 resource "aws_subnet" "subnet2" {
   vpc_id     = aws_vpc.main.id
-cidr_block = "${cidrsubnet(var.cidr_block,8,6)}"
-  availability_zone  = "${data.aws_availability_zones.azs.names[0]}"
+cidr_block = cidrsubnet(var.cidr_block,8,6)
+  availability_zone  = data.aws_availability_zones.azs.names[0]
 tags = {
     Name = var.prisub_name1
     #Name =  "app-subnet-az-1"
@@ -215,25 +215,31 @@ resource "aws_instance" "publicinstance" {
   tags= {
     Name = var.publicinst_name
   }
-provisioner "remote-exec" {
-inline = [
-	"echo 'build ssh connection' "
-]
-connection {
-	host = self.public_ip
-	user = "ec2-user"
-	type = "ssh"
-	private_key = file("./harish")
+#provisioner "remote-exec" {
+#inline = [
+#	"echo 'build ssh connection' "
+#]
+#connection {
+#	host = self.public_ip
+#	user = "ec2-user"
+#	type = "ssh"
+#	private_key = file("./harish")
+#}
+#}
+
+provisioner "local-exec" {
+	command = "echo public_ip: ${aws_instance.publicinstance.public_ip} > ./vars.yml" 
 }
+provisioner "local-exec" {
+	command = "echo private_ip: ${aws_instance.privateinstance.private_ip} > ./pri.yml" 
 }
 #provisioner "local-exec" {
-#	command = "echo  ${aws_instance.publicinstance.public_ip} >> addgel4" 
+#        command = "ansible-playbook -i /home/ubuntu/CloudTechner/inventory apache.yml --private-key=harish --become"
 #}
-provisioner "local-exec" {
-	command = "ansible-playbook -i ${aws_instance.publicinstance.public_ip}  play.yml --private-key=harish" 
+#provisioner "local-exec" {
+#        command = "ansible-playbook -i pri.yml tomcat.yml --private-key=harish --become"
+#}
 }
-}
-
 #create private instance
 resource "aws_instance" "privateinstance" {
   ami                    = "ami-08e0ca9924195beba"
@@ -272,7 +278,24 @@ resource "aws_route_table_association" "a2" {
   subnet_id      = aws_subnet.subnet2.id
   route_table_id = aws_route_table.r1.id
 }
-# resource "aws_security_group" "mydb1" {
+
+#provisioner "remote-exec" {
+#inline = [
+#         "echo 'build ssh connection' "
+#]
+#connection {
+#         host = self.public_ip
+#         user = "ec2-user"
+#         type = "ssh"
+#         private_key = file("./harish")
+#}
+#}
+
+#provisioner "local-exec" {
+
+#provisioner "local-exec" {
+#       command = "ansible-playbook -i inventory play.yml --private-key=harish --become"
+#}
 #   name = "mydb1sg"
 
 #   description = "RDS postgres servers (terraform-managed)"

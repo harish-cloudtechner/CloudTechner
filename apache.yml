@@ -1,0 +1,68 @@
+- hosts: [public]
+  become: yes
+  vars_files:
+          - pri.yml
+  tasks:
+    - name: install httpd
+      yum: name=httpd update_cache=yes state=latest
+   
+
+    - name: file deploy
+      template:
+              src: apache.j2
+              dest: /etc/httpd/conf.d/apache.conf
+              force: yes
+     
+
+- hosts: [private]
+  tasks:
+    - name: install java
+      yum: name=java update_cache=yes state=latest
+
+    - name: Download Tomcat
+      get_url: 
+        url: https://downloads.apache.org/tomcat/tomcat-8/v8.5.66/bin/apache-tomcat-8.5.66.tar.gz 
+        dest: /home/ec2-user
+
+    - name: Extract archive  
+      shell: tar -xvf /home/ec2-user/apache-tomcat-8.5.66.tar.gz       
+
+     
+    - name: Make my directory tree readable
+      file:
+        path: /home/ec2-user/apache-tomcat-8.5.66/bin
+        mode: 0755
+        recurse: yes
+    
+    - name: change permissions
+      file: 
+        path: /home/ec2-user/apache-tomcat-8.5.66/webapps
+        mode: 0755
+        recurse: yes
+
+
+    - name: copy tomcat.service file
+      template: 
+        src: /home/ubuntu/CloudTechner/tomcat.service
+        dest: /etc/systemd/system/tomcat.service
+        mode: 0755
+
+
+    - name: daemon reload
+      shell: systemctl daemon-reload
+
+
+    - name: download jenkins
+      get_url:
+        url: https://get.jenkins.io/war/2.272/jenkins.war
+        dest: /home/ec2-user/apache-tomcat-8.5.66/webapps
+
+    - name: Run Tomcat 
+      shell: systemctl restart tomcat.service 
+          
+
+- hosts: [public]
+  become: yes
+  tasks:
+    - name: restart apache server
+      shell: systemctl restart httpd  

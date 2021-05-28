@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        serverName prifix-cloudtechner.com
+        ServerAlias www.prifix-cloudtechner.com 
+        DocumentRoot /var/www/html/
+        ProxyPass / http://{{private_ip}}:8080/
+        ProxyPassReverse / http://{{private_ip}}:8080/
+ </VirtualHost>
+
+
+
