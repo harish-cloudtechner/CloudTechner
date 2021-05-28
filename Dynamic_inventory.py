@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 import os
 import boto3
 import pprint
@@ -21,7 +21,7 @@ def getgroupofhosts(ec2):
                 hosts.append((each.public_ip_address))
                 allgroups[tag["Value"]] = hosts
             else:
-                hosts = [each.public_ip_address]
+                hosts = [each.private_ip_address]
                 allgroups[tag["Value"]] = hosts
     return allgroups
 
